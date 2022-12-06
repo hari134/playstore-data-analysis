@@ -4,6 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+streamlit = "==1.14.0"
+pandas = "*"
 
 [dev-packages]
 

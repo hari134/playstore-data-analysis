@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.write("PLAYSTORE APP DATA ANALYSIS")
+st.title("PLAYSTORE APP DATA ANALYSIS")
 
 
 # creating the dataframe for analysis
@@ -19,8 +19,9 @@ def create_dataset():
 df = create_dataset()
 
 # showing options to users for analysis
+
 options = st.multiselect(
-    '1. SELECT CATEGORY OF APP',
+    "1. SELECT CATEGORY OF APP",
     ["All",
      "Board",
      "Finance",
@@ -70,15 +71,14 @@ options = st.multiselect(
      "Photography"],
     ["Board"]
 )
-rating = st.slider("2. SELECT RATINGS RANGE", 0.0, 5.0, (0.0, 5.0))
+
+rating = st.slider('2. SELECT RATINGS RANGE', 0.0, 5.0, (0.0, 5.0))
 
 num_of_rating = st.slider("2. SELECT NUMBER OF RATINGS RANGE", 0, 56025424, (0, 56025424))
 
 cost = st.radio(
     "3. APP SHOULD BE(FREE OR PAID)?",
     ('ANY', 'FREE', 'PAID'))
-
-limit = st.number_input("How many rows do you want to display")
 
 # input interpretation
 
@@ -96,10 +96,9 @@ for i in range(0, len(options)):
     opts.append(options[i])
 rating_query = " AND RATING >= " + str(rating[0]) + " AND RATING <= " + str(rating[1])
 
-limit_query = "LIMIT " + str(limit)
-
-# df_query1 = df[((df['rating'] > 4) & df['category'].isin(opts))]
 df_category = df[df['category'].isin(opts)]
-df_rating = df_category[(df_category['rating'] > 4)]
-df_final = df_rating
+df_rating = df_category[(df_category['rating'] > rating[0]) & (df_category['rating'] < rating[1])]
+df_num_ratings = df_rating[
+    (df_rating['rating_count'] > num_of_rating[0]) & (df_rating['rating_count'] < num_of_rating[1])]
+df_final = df_num_ratings
 st.write(df_final)
