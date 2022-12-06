@@ -80,6 +80,9 @@ cost = st.radio(
 
 limit = st.number_input("How many rows do you want to display")
 
+# input interpretation
+
+# cost of app
 if cost == 'ANY':
     query_cost = "AND FREE = 1 OR FREE = 0"
 elif cost == 'FREE':
@@ -87,12 +90,16 @@ elif cost == 'FREE':
 else:
     query_cost = "AND FREE = 0"
 
-opts = "'" + str(options[0]) + "'"
-for i in range(1, len(options)):
-    opts = opts + "," + "'" + options[i] + "'"
-
+# categories of app
+opts = []
+for i in range(0, len(options)):
+    opts.append(options[i])
 rating_query = " AND RATING >= " + str(rating[0]) + " AND RATING <= " + str(rating[1])
 
 limit_query = "LIMIT " + str(limit)
 
-st.write(df[((df['rating'] > 4) & (df['content_rating'] == 'Everyone'))])
+# df_query1 = df[((df['rating'] > 4) & df['category'].isin(opts))]
+df_category = df[df['category'].isin(opts)]
+df_rating = df_category[(df_category['rating'] > 4)]
+df_final = df_rating
+st.write(df_final)
