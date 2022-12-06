@@ -98,7 +98,6 @@ rating_query = " AND RATING >= " + str(rating[0]) + " AND RATING <= " + str(rati
 
 df_category = df[df['category'].isin(opts)]
 df_rating = df_category[(df_category['rating'] > rating[0]) & (df_category['rating'] < rating[1])]
-df_num_ratings = df_rating[
-    (df_rating['rating_count'] > num_of_rating[0]) & (df_rating['rating_count'] < num_of_rating[1])]
+df_num_ratings = df_rating[(df_rating['rating_count'] > num_of_rating[0]) & (df_rating['rating_count'] < num_of_rating[1])]
 df_final = df_num_ratings
 st.write(df_final)
