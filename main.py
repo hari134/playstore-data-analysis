@@ -48,7 +48,7 @@ cost = st.radio(
     "5. APP SHOULD BE(FREE OR PAID)?",
     ('ANY', 'FREE', 'PAID'))
 
-app_size = st.slider("4. SELECT RANGE OF SIZE OF THE APP(in MB)", 1, 999, (1, 999))
+app_size = st.slider("6. SELECT RANGE OF SIZE OF THE APP(in MB)", 1, 999, (1, 999))
 
 
 # input interpretation
