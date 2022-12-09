@@ -21,7 +21,7 @@ df = create_dataset()
 # showing options to users for analysis
 
 options = st.multiselect(
-    "1. SELECT CATEGORY OF APP",
+    "1. SELECT CATEGORY OF APPS",
     ["All",
      "Board",
      "Finance",
@@ -71,13 +71,22 @@ options = st.multiselect(
      "Photography"],
     ["Board"]
 )
+content_rating = st.multiselect(
+    "2. SELECT CONTENT RATING OF APPS",
+    ["Unrated",
+     "Everyone 10+",
+     "Teen",
+     "Everyone",
+     "Adults only 18+",
+     "Mature 17+"],
+    ["Everyone"]
+)
+rating = st.slider('3. SELECT RATINGS RANGE', 0.0, 5.0, (0.0, 5.0))
 
-rating = st.slider('2. SELECT RATINGS RANGE', 0.0, 5.0, (0.0, 5.0))
-
-num_of_rating = st.slider("2. SELECT NUMBER OF RATINGS RANGE", 0, 56025424, (0, 56025424))
+num_of_rating = st.slider("4. SELECT NUMBER OF RATINGS RANGE", 0, 56025424, (0, 56025424))
 
 cost = st.radio(
-    "3. APP SHOULD BE(FREE OR PAID)?",
+    "5. APP SHOULD BE(FREE OR PAID)?",
     ('ANY', 'FREE', 'PAID'))
 
 # input interpretation
@@ -94,10 +103,19 @@ else:
 opts = []
 for i in range(0, len(options)):
     opts.append(options[i])
+
+# content rating of apps
+content_rating_opts = []
+for i in range(0, len(content_rating)):
+    content_rating_opts.append(content_rating[i])
 rating_query = " AND RATING >= " + str(rating[0]) + " AND RATING <= " + str(rating[1])
 
-df_category = df[df['category'].isin(opts)]
-df_rating = df_category[(df_category['rating'] > rating[0]) & (df_category['rating'] < rating[1])]
-df_num_ratings = df_rating[(df_rating['rating_count'] > num_of_rating[0]) & (df_rating['rating_count'] < num_of_rating[1])]
-df_final = df_num_ratings
-st.write(df_final)
+df_category = df[df['category'].isin(opts) & df['content_rating'].isin(content_rating_opts) & (
+        (df['rating'] > rating[0]) & (df['rating'] < rating[1])) & (
+                         (df['rating_count'] > num_of_rating[0]) & (df['rating_count'] < num_of_rating[1]))]
+# df_rating = df_category[(df_category['rating'] > rating[0]) & (df_category['rating'] < rating[1])]
+# df_num_ratings = df_rating[
+#     (df_rating['rating_count'] > num_of_rating[0]) & (df_rating['rating_count'] < num_of_rating[1])]
+# df_final = df_num_ratings
+# print(df_final)
+st.write(df_category)
