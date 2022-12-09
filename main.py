@@ -89,15 +89,16 @@ cost = st.radio(
     "5. APP SHOULD BE(FREE OR PAID)?",
     ('ANY', 'FREE', 'PAID'))
 
+app_size = st.slider("4. SELECT RANGE OF SIZE OF THE APP(in MB)", 1, 999, (1, 999))
 # input interpretation
 
 # cost of app
-if cost == 'ANY':
-    query_cost = "AND FREE = 1 OR FREE = 0"
-elif cost == 'FREE':
-    query_cost = "AND FREE = 1"
+if cost == 'FREE':
+    query_cost = 1
+elif cost == 'PAID':
+    query_cost = 0
 else:
-    query_cost = "AND FREE = 0"
+    query_cost = 2
 
 # categories of app
 opts = []
@@ -110,9 +111,23 @@ for i in range(0, len(content_rating)):
     content_rating_opts.append(content_rating[i])
 rating_query = " AND RATING >= " + str(rating[0]) + " AND RATING <= " + str(rating[1])
 
-df_category = df[df['category'].isin(opts) & df['content_rating'].isin(content_rating_opts) & (
-        (df['rating'] > rating[0]) & (df['rating'] < rating[1])) & (
-                         (df['rating_count'] > num_of_rating[0]) & (df['rating_count'] < num_of_rating[1]))]
+if query_cost == 1:
+    df_category = df[df['category'].isin(opts) & df['content_rating'].isin(content_rating_opts) & (
+        (df['rating'] > rating[0]) & (df['rating'] < rating[1])) &
+        ((df['rating_count'] > num_of_rating[0]) & (df['rating_count'] < num_of_rating[1]) & df['free'] == 1) &
+        ((df['size'] > app_size[0]) & (df['size'] < app_size[1]))]
+
+elif query_cost == 0:
+    df_category = df[df['category'].isin(opts) & df['content_rating'].isin(content_rating_opts) & (
+        df['rating'] > rating[0]) & (df['rating'] < rating[1]) &(
+        (df['rating_count'] > num_of_rating[0]) &
+        (df['rating_count'] < num_of_rating[1]) & df['free'] == 0) &
+        ((df['size'] > app_size[0]) & (df['size'] < app_size[1]))]
+else:
+    df_category = df[df['category'].isin(opts) & df['content_rating'].isin(content_rating_opts) & (
+        (df['rating'] > rating[0]) & (df['rating'] < rating[1])) &
+        ((df['rating_count'] > num_of_rating[0]) & (df['rating_count'] < num_of_rating[1])) & (
+        (df['size'] > app_size[0]) & (df['size'] < app_size[1]))]
 # df_rating = df_category[(df_category['rating'] > rating[0]) & (df_category['rating'] < rating[1])]
 # df_num_ratings = df_rating[
 #     (df_rating['rating_count'] > num_of_rating[0]) & (df_rating['rating_count'] < num_of_rating[1])]
