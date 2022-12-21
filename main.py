@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+import datetime
 import visualization
 
 st.title("PLAYSTORE APP DATA ANALYSIS")
@@ -10,19 +10,8 @@ st.title("PLAYSTORE APP DATA ANALYSIS")
 @st.cache
 def create_dataset():
     data = pd.read_csv("playstore_data.csv")
-    data.columns = [
-        "app_name",
-        "category",
-        "rating",
-        "rating_count",
-        "maximum_installs",
-        "free",
-        "price",
-        "currency",
-        "size",
-        "released",
-        "content_rating",
-    ]
+    data.columns = visualization.utility_variables['column_names']
+    data['released'] = pd.to_datetime(data['released'])
     return data
 
 
@@ -30,78 +19,42 @@ def create_dataset():
 df = create_dataset()
 
 # showing categories to users for analysis
+with st.sidebar:
 
-categories = st.multiselect(
-    "1. SELECT CATEGORY OF APPS",
-    [
-        "All",
-        "Board",
-        "Finance",
-        "Role Playing",
-        "Health & Fitness",
-        "Productivity",
-        "Comics",
-        "Adventure",
-        "Puzzle",
-        "Strategy",
-        "Shopping",
-        "Casual",
-        "Simulation",
-        "Education",
-        "Beauty",
-        "Books & Reference",
-        "Arcade",
-        "Auto & Vehicles",
-        "Sports",
-        "Food & Drink",
-        "Dating",
-        "Weather",
-        "Music",
-        "Entertainment",
-        "Communication",
-        "Events",
-        "Medical",
-        "Casino",
-        "Travel & Local",
-        "Maps & Navigation",
-        "Racing",
-        "Action",
-        "Card",
-        "News & Magazines",
-        "Art & Design",
-        "Parenting",
-        "Lifestyle",
-        "Trivia",
-        "Word",
-        "House & Home",
-        "Tools",
-        "Business",
-        "Libraries & Demo",
-        "Social",
-        "Personalization",
-        "Video Players & Editors",
-        "Photography",
-    ],
-    ["All"],
-)
-content_rating = st.multiselect(
-    "2. SELECT CONTENT RATING OF APPS",
-    ["Unrated", "Everyone 10+", "Teen", "Everyone", "Adults only 18+", "Mature 17+"],
-    ["Everyone"],
-)
-rating = st.slider("3. SELECT RATINGS RANGE", 0.0, 5.0, (0.0, 5.0))
+    st.header("FILTERS")
 
-num_of_rating = st.slider(
-    "4. SELECT NUMBER OF RATINGS RANGE", 0, 56025424, (0, 56025424)
-)
+    categories = st.multiselect(
+    "1. SELECT CATEGORY OF APPS",visualization.utility_variables['all_categories'],["All"],)
 
-cost = st.radio("5. APP SHOULD BE(FREE OR PAID)?", ("ANY", "FREE", "PAID"))
+    content_rating = st.multiselect(
+        "2. SELECT CONTENT RATING OF APPS",visualization.utility_variables['content_ratings'],["Everyone"])
 
-app_size = st.slider(
-    "6. SELECT RANGE OF SIZE OF THE APP(in MB)", 1, 999, (1, 999))
+    rating = st.slider("3. SELECT RATINGS RANGE", 0.0, 5.0, (0.0, 5.0))
+
+    num_of_rating = st.slider(
+        "4. SELECT NUMBER OF RATINGS RANGE", 0, 56025424, (0, 56025424)
+    )
+
+    cost = st.radio("5. APP SHOULD BE(FREE OR PAID)?", ("ANY", "FREE", "PAID"))
+
+    app_size = st.slider(
+        "6. SELECT RANGE OF SIZE OF THE APP(in MB)", 1, 999, (1, 999))
+
+    min_installs_col, max_installs_col = st.columns(2)
+    with min_installs_col:
+        min_installs = st.number_input("7. MINIMUM INSTALLS",0,1704495994,0)
+
+    with max_installs_col:
+        max_installs = st.number_input("MAXIMUM INSTALLS",0,1704495994,1704495994)
 
 
-# input interpretation
+    min_date_col, max_date_col = st.columns(2)
+    with min_date_col:
+        min_date = st.date_input("8. ENTER MINIMUM RELEASE DATE ",datetime.date(2010,1,28))
+
+    with max_date_col:
+        max_date = st.date_input("  ENTER MAXIMUM RELEASE DATE ",datetime.date(2021,6,15))
+    # input interpretation
 
 # cost of app
 if cost == "FREE":
@@ -179,7 +132,9 @@ else:
                 (df["rating_count"] > num_of_rating[0])
                 & (df["rating_count"] < num_of_rating[1])
             )
-            & ((df["size"] > app_size[0]) & (df["size"] < app_size[1]))
+            & (df["size"] > app_size[0]) & (df["size"] < app_size[1])
+            & ((df['maximum_installs'] < max_installs) & (df['maximum_installs'] > min_installs))
+            & ((df['released'] < '2021-06-15') & (df['released'] > '2010-01-28'))
         ]
     else:
         df_final = df[
