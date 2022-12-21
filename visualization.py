@@ -110,7 +110,7 @@ class visualizer:
     def get_filtered_data(self) -> pd.DataFrame:
         df = self.df
         parsed_input = visualizer.parse_input()
-        df_final = df[
+        df_filtered = df[
             df["category"].isin(parsed_input['categories'])
             & df["content_rating"].isin(parsed_input['content_rating'])
             & ((df["rating"] > parsed_input['rating'][0]) & (parsed_input['rating'][1]))
@@ -122,7 +122,7 @@ class visualizer:
             & ((df['maximum_installs'] < parsed_input['installs']['max_installs']) & (df['installs'] > parsed_input['installs']['min_installs']))
             & ((df['released'] < parsed_input['released']['max_date']) & (df['released'] > parsed_input['released']['min_date']))
         ]
-        return df_final
+        return df_filtered
 
 
 def plot_bar_categories(categories, df):
