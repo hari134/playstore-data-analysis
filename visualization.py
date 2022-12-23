@@ -120,8 +120,10 @@ class visualizer:
                 & (df["rating_count"] < parsed_input['num_of_rating'][1])
             )
             & (df["size"] > parsed_input['app_size'][0]) & (df["size"] < parsed_input['app_size'][1])
-            & ((df['maximum_installs'] < parsed_input['installs']['max_installs']) & (df['maximum_installs'] > parsed_input['installs']['min_installs']))
-            & ((df['released'] < parsed_input['released']['max_date']) & (df['released'] > parsed_input['released']['min_date']))
+            & ((df['maximum_installs'] < parsed_input['installs']['max_installs']) 
+             & (df['maximum_installs'] > parsed_input['installs']['min_installs']))
+            & ((df['released'] < parsed_input['released']['max_date']) 
+             & (df['released'] > parsed_input['released']['min_date']))
         ]
         self.fileterd_df = df_filtered
         return df_filtered
