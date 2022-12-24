@@ -68,7 +68,8 @@ all_categories: list[str] = [
     "Photography",
 ]
 
-content_ratings: list[str] = ["Unrated", "Everyone 10+", "Teen", "Everyone", "Adults only 18+", "Mature 17+"]
+content_ratings: list[str] = ["Unrated", "Everyone 10+",
+                              "Teen", "Everyone", "Adults only 18+", "Mature 17+"]
 
 
 utility_variables: dict[str, list[str]] = {
@@ -83,7 +84,6 @@ class visualizer:
         self.parameters = kwargs
         self.df = dataframe
 
-    @staticmethod
     def parse_input(parameters) -> dict[str, any]:
         categories: list[str] = parameters["categories"]
         cost: str = parameters["cost"]
@@ -114,16 +114,16 @@ class visualizer:
             df["category"].isin(parsed_input['categories'])
             & (df['free'].isin(parsed_input['cost']))
             & df["content_rating"].isin(parsed_input['content_rating'])
-            & ((df["rating"] > parsed_input['rating'][0]) & (df["rating"]<parsed_input['rating'][1]))
+            & ((df["rating"] > parsed_input['rating'][0]) & (df["rating"] < parsed_input['rating'][1]))
             & (
                 (df["rating_count"] > parsed_input['num_of_rating'][0])
                 & (df["rating_count"] < parsed_input['num_of_rating'][1])
             )
             & (df["size"] > parsed_input['app_size'][0]) & (df["size"] < parsed_input['app_size'][1])
-            & ((df['maximum_installs'] < parsed_input['installs']['max_installs']) 
-             & (df['maximum_installs'] > parsed_input['installs']['min_installs']))
-            & ((df['released'] < parsed_input['released']['max_date']) 
-             & (df['released'] > parsed_input['released']['min_date']))
+            & ((df['maximum_installs'] < parsed_input['installs']['max_installs'])
+               & (df['maximum_installs'] > parsed_input['installs']['min_installs']))
+            & ((df['released'] < parsed_input['released']['max_date'])
+               & (df['released'] > parsed_input['released']['min_date']))
         ]
         self.fileterd_df = df_filtered
         return df_filtered
@@ -141,7 +141,7 @@ class visualizer:
         plt.xlabel("Category of app ")
         plt.ylabel("Number of occurrences ")
         plt.title("Category wise bar graph of number of occurrences")
-        st.success("APP CATEGORY WISE BAR GRAPH")
+        st.success("""APP CATEGORY WISE BAR GRAPH""")
         st.pyplot(fig)
 
     def plot_bar_content_rating(self):
@@ -150,9 +150,7 @@ class visualizer:
         count_list = []
         for content_rating in self.parameters['content_rating']:
             count_list.append(
-                df.loc[df.content_rating == content_rating,
-                       "content_rating"].count()
-            )
+                df.loc[df.content_rating == content_rating, "content_rating"].count())
             content_rating_list.append(content_rating)
         fig = plt.figure(figsize=(20, 10))
         plt.bar(content_rating_list, count_list, color="blue", width=0.4)

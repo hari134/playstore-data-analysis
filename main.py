@@ -5,7 +5,9 @@ import datetime
 import visualization
 
 st.title("PLAYSTORE APP DATA ANALYSIS")
-
+st.markdown("This is an app for exploratory data analysis on the **Playstore apps dataset**.")
+st.markdown("The dataset has over **_1_ _million_ _rows_** and is a cleaned version of the original Kaggle dataset.")
+st.markdown("The cleaned dataset can be found here: https://drive.google.com/file/d/1jiL0Qy_ulouhOEK7amaGweuuh_CRwEF4/view?usp=sharing")
 
 # creating the dataframe for analysis
 @st.cache
@@ -64,10 +66,11 @@ filter_input = {"categories": categories, "cost": cost, "content_rating": conten
 
 v = visualization.visualizer(df,**filter_input)
 filtered_df = v.get_filtered_data()
+st.success("FILTERED RESULT")
+st.write(filtered_df)
 v.plot_bar_categories()
 v.plot_bar_content_rating()
 
-st.success("FILTERED RESULT")
-st.write(filtered_df)
+
 
 
