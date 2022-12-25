@@ -159,3 +159,8 @@ class visualizer:
         plt.title("Category wise bar graph of number of occurrences")
         st.success("CONTENT RATING WISE BAR GRAPH")
         st.pyplot(fig)
+
+    def display_table(self):
+        df = self.fileterd_df
+        st.success("FILTERED RESULT")
+        st.write(df)
