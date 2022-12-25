@@ -66,8 +66,7 @@ filter_input = {"categories": categories, "cost": cost, "content_rating": conten
 
 v = visualizer(df,**filter_input)
 filtered_df = v.get_filtered_data()
-st.success("FILTERED RESULT")
-st.write(filtered_df)
+v.display_table()
 v.plot_bar_categories()
 v.plot_bar_content_rating()
 
