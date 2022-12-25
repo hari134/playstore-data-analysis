@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import datetime
-import visualization
+from visualization import visualizer ,utility_variables
 
 st.title("PLAYSTORE APP DATA ANALYSIS")
 st.markdown("This is an app for exploratory data analysis on the **Playstore apps dataset**.")
@@ -13,7 +13,7 @@ st.markdown("The cleaned dataset can be found here: https://drive.google.com/fil
 @st.cache
 def create_dataset():
     data = pd.read_csv("playstore_data.csv")
-    data.columns = visualization.utility_variables['column_names']
+    data.columns = utility_variables['column_names']
     data['released'] = pd.to_datetime(data['released'])
     return data
 
@@ -27,9 +27,9 @@ with st.sidebar:
     st.header("FILTERS")
 
     categories = st.multiselect(
-        "1. SELECT CATEGORY OF APPS", visualization.utility_variables['all_categories'], ["All"])
+        "1. SELECT CATEGORY OF APPS", utility_variables['all_categories'], ["All"])
 
-    content_rating = st.multiselect("2. SELECT CONTENT RATING OF APPS", visualization.utility_variables['content_ratings'], ["Everyone"])
+    content_rating = st.multiselect("2. SELECT CONTENT RATING OF APPS", utility_variables['content_ratings'], ["Everyone"])
 
     rating = st.slider("3. SELECT RATINGS RANGE", 0.0, 5.0, (0.0, 5.0))
 
@@ -64,7 +64,7 @@ filter_input = {"categories": categories, "cost": cost, "content_rating": conten
                 "num_of_rating": num_of_rating, "app_size": app_size, "installs": {"min_installs": min_installs, "max_installs": max_installs},
                 "released":{"min_date":np.datetime64(min_date),"max_date":np.datetime64(max_date)}}
 
-v = visualization.visualizer(df,**filter_input)
+v = visualizer(df,**filter_input)
 filtered_df = v.get_filtered_data()
 st.success("FILTERED RESULT")
 st.write(filtered_df)
