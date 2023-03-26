@@ -5,7 +5,7 @@ import datetime
 from visualization import visualizer ,utility_variables
 
 st.title("PLAYSTORE APP DATA ANALYSIS")
-st.markdown("This is an app for exploratory data analysis on the **Playstore apps dataset**.")
+st.markdown("This is an app for analyzing the **Playstore apps dataset**.")
 st.markdown("The dataset has over **_1_ _million_ _rows_** and is a cleaned version of the original Kaggle dataset.")
 st.markdown("The cleaned dataset can be found here: https://drive.google.com/file/d/1jiL0Qy_ulouhOEK7amaGweuuh_CRwEF4/view?usp=sharing")
 
