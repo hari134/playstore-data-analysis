@@ -5,6 +5,7 @@ import random
 import datetime
 from visualization import visualizer ,utility_variables
 
+
 st.title("PLAYSTORE APP DATA ANALYSIS")
 st.markdown("This is an app for analyzing the **Playstore apps dataset**.")
 st.markdown("The dataset has over **_1_ _million_ _rows_** and is a cleaned version of the original Kaggle dataset.")
@@ -16,11 +17,13 @@ def create_dataset():
     data = pd.read_csv("playstore_data.csv")
     data.columns = utility_variables['column_names']
     data['released'] = pd.to_datetime(data['released'])
-    return data
+    INITIAL_CATEGORIES = random.sample(utility_variables["all_categories"][1:],5)
+    INITIAL_RATINGS = random.sample(utility_variables["content_ratings"][1:],3) 
+    return data, INITIAL_CATEGORIES, INITIAL_RATINGS
 
 
 # loading dataframe
-df = create_dataset()
+df, INITIAL_CATEGORIES, INITIAL_RATINGS = create_dataset()
 
 # showing categories to users for analysis
 with st.sidebar:
@@ -28,9 +31,9 @@ with st.sidebar:
     st.header("FILTERS")
 
     categories = st.multiselect(
-        "1. SELECT CATEGORY OF APPS", utility_variables['all_categories'], random.sample(utility_variables["all_categories"][1:],5))
+        "1. SELECT CATEGORY OF APPS", utility_variables['all_categories'], INITIAL_CATEGORIES)
 
-    content_rating = st.multiselect("2. SELECT CONTENT RATING OF APPS", utility_variables['content_ratings'], random.sample(utility_variables["content_ratings"][1:],3))
+    content_rating = st.multiselect("2. SELECT CONTENT RATING OF APPS", utility_variables['content_ratings'], INITIAL_RATINGS)
 
     rating = st.slider("3. SELECT RATINGS RANGE", 0.0, 5.0, (0.0, 5.0))
 
