@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import random
 import datetime
 from visualization import visualizer ,utility_variables
 
@@ -27,9 +28,9 @@ with st.sidebar:
     st.header("FILTERS")
 
     categories = st.multiselect(
-        "1. SELECT CATEGORY OF APPS", utility_variables['all_categories'], ["All"])
+        "1. SELECT CATEGORY OF APPS", utility_variables['all_categories'], random.sample(utility_variables["all_categories"][1:],5))
 
-    content_rating = st.multiselect("2. SELECT CONTENT RATING OF APPS", utility_variables['content_ratings'], ["Everyone"])
+    content_rating = st.multiselect("2. SELECT CONTENT RATING OF APPS", utility_variables['content_ratings'], random.sample(utility_variables["content_ratings"][1:],3))
 
     rating = st.slider("3. SELECT RATINGS RANGE", 0.0, 5.0, (0.0, 5.0))
 
